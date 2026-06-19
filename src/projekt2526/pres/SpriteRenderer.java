@@ -95,7 +95,6 @@ public class SpriteRenderer {
 				part(spriteSheet, 0,164,12,174,153,135) // bag
         );
 		
-		
 		// diverWithBag[4] == treasureGrabAnim[3] --> possible performance incrase!
 		
 		treasureGrabAnim[0] = new Sprite(
@@ -196,6 +195,26 @@ public class SpriteRenderer {
 		tentacle4[2] = new Sprite(
                 part(spriteSheet, 20,172,36,188,179,111) // third segment of the fourth tentacle
         );
-		
     }
+
+	public void renderSpritesDebug(Graphics2D g2d) {
+
+        for (Sprite s : boatDiver) { if (s != null) s.draw(g2d); }
+        for (Sprite s : extraDiver) { if (s != null) s.draw(g2d); }
+        for (Sprite s : diverEmpty) { if (s != null) s.draw(g2d); }
+        for (Sprite s : diverWithBag) { if (s != null) s.draw(g2d); }
+        for (Sprite s : treasureGrabAnim) { if (s != null) s.draw(g2d); }
+        for (Sprite s : caughtBodyAnim) { if (s != null) s.draw(g2d); }
+
+        if (tentacle1Base != null) tentacle1Base.draw(g2d);
+        for (Sprite s : tentacle1Up) { if (s != null) s.draw(g2d); }
+        for (Sprite s : tentacle1Down) { if (s != null) s.draw(g2d); }
+        
+        for (Sprite s : tentacle2) { if (s != null) s.draw(g2d); }
+        if (tentacle2Catch != null) tentacle2Catch.draw(g2d);
+        
+        for (Sprite s : tentacle3) { if (s != null) s.draw(g2d); }
+        for (Sprite s : tentacle4) { if (s != null) s.draw(g2d); }
+    }
+	
 }
