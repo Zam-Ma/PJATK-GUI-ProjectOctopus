@@ -1,5 +1,7 @@
 package projekt2526.pres;
 
+import projekt2526.game.Board;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -50,10 +52,10 @@ public class SpriteRenderer {
         );
 		
         extraDiver[0] = new Sprite(
-                part(spriteSheet, 0,153,15,147,50,5) // head & body left-diver
+                part(spriteSheet, 0,133,15,153,50,5) // head & body left-diver
         );
         extraDiver[1] = new Sprite(
-                part(spriteSheet, 0,153,15,147,68,5) // head & body right-diver
+                part(spriteSheet, 0,133,15,153,68,5) // head & body right-diver
         );
 		
         diverEmpty[0] = new Sprite(
@@ -95,7 +97,7 @@ public class SpriteRenderer {
 				part(spriteSheet, 0,164,12,174,153,135) // bag
         );
 		
-		// diverWithBag[4] == treasureGrabAnim[3] --> possible performance incrase!
+		// diverWithBag[4] == treasureGrabAnim[3] --> moglbym usunac jeszcze jedna zmienna w pamieci
 		
 		treasureGrabAnim[0] = new Sprite(
                 part(spriteSheet, 161,133,189,166,160,119), // body
@@ -128,7 +130,7 @@ public class SpriteRenderer {
         );
 		caughtBodyAnim[1] = new Sprite(
                 part(spriteSheet, 190,133,209,153,124,75), // body
-				part(spriteSheet, 198,155,202,164,137,99), // arm lowered  -> needs revision
+				part(spriteSheet, 48,175,52,184,137,99), // arm lowered
 				part(spriteSheet, 210,133,219,140,157,80), // leg spread left
 				part(spriteSheet, 203,155,209,164,156,97) // leg spread right
         );
@@ -154,7 +156,7 @@ public class SpriteRenderer {
         );
 		
 		tentacle2[0] = new Sprite(
-                part(spriteSheet, 186,167,210,181,110,66) // first segment of the second tentacle
+                part(spriteSheet, 186,169,210,183,110,66) // first segment of the second tentacle
         );
 		tentacle2[1] = new Sprite(
                 part(spriteSheet, 210,156,222,173,108,79) // second segment of the second tentacle
@@ -197,8 +199,87 @@ public class SpriteRenderer {
         );
     }
 
-	public void renderSpritesDebug(Graphics2D g2d) {
+    public void render(Graphics2D g2d, Board board){
+        if (board == null) return;
 
+        if (board.isSegmentActive(0, 0) && extraDiver[0] != null) extraDiver[0].draw(g2d);
+        if (board.isSegmentActive(0, 1) && extraDiver[1] != null) extraDiver[1].draw(g2d);
+
+        if (board.isPlayerOnBoat() && boatDiver[0] != null) {
+            boatDiver[0].draw(g2d);
+        }
+
+        switch(board.getCurrentPlayerState()){
+            case ON_BOAT:
+                if (boatDiver[0] != null) boatDiver[0].draw(g2d);
+                break;
+            case DIVING_EMPTY:
+                int emptyPos = board.getPlayerWaterPosition();
+                if (diverEmpty[emptyPos] != null) diverEmpty[emptyPos].draw(g2d);
+                break;
+            case DIVING_WITH_BAG:
+                int bagPos = board.getPlayerWaterPosition();
+                if (diverWithBag[bagPos] != null) diverWithBag[bagPos].draw(g2d);
+                break;
+            case PACKING_TREASURE:
+                int animFrame = board.getTreasureAnimFrame();
+                if (treasureGrabAnim[animFrame] != null) treasureGrabAnim[animFrame].draw(g2d);
+                break;
+            case CAUGHT:
+                int caughtFrame = board.getCaughtAnimFrame();
+                if (caughtBodyAnim[caughtFrame] != null) caughtBodyAnim[caughtFrame].draw(g2d);
+                if (board.getLives() > 0 && boatDiver[0] != null) {
+                    boatDiver[0].draw(g2d);
+                }
+                break;
+            case DEPOSIT:
+                int depFrame = board.getDepositAnimFrame();
+                if (boatDiver[depFrame] != null) boatDiver[depFrame].draw(g2d);
+                break;
+        }
+
+        // Pierwszy segment pierwszej macki
+        if (board.isSegmentActive(1,0) || board.isSegmentActive(2,0)){
+            if (tentacle1Base != null) tentacle1Base.draw(g2d);
+        }
+        // Pierwsza macka idzie w góre
+        if (board.isSegmentActive(1,1) && tentacle1Up[0] != null) tentacle1Up[0].draw(g2d);
+        if (board.isSegmentActive(1,2) && tentacle1Up[1] != null) tentacle1Up[1].draw(g2d);
+        // Pierwsza macka idzie w dół
+        if (board.isSegmentActive(2,1) && tentacle1Down[0] != null) tentacle1Down[0].draw(g2d);
+        if (board.isSegmentActive(2,2) && tentacle1Down[1] != null) tentacle1Down[1].draw(g2d);
+        if (board.isSegmentActive(2,3) && tentacle1Down[2] != null) tentacle1Down[2].draw(g2d);
+
+        // Druga macka
+        if (board.getCurrentPlayerState() == Board.PlayerState.CAUGHT) {
+            if (tentacle2[0] != null) tentacle2[0].draw(g2d);
+            if (tentacle2[1] != null) tentacle2[1].draw(g2d);
+            if (tentacle2Catch != null) tentacle2Catch.draw(g2d);
+        } else {
+            // Standardowe rysowanie segment po segmencie
+            for (int i = 0; i < tentacle2.length; i++) {
+                if (board.isSegmentActive(3, i) && tentacle2[i] != null) {
+                    tentacle2[i].draw(g2d);
+                }
+            }
+        }
+
+        // Trzecia macka
+        for (int i = 0; i < tentacle3.length; i++) {
+            if (board.isSegmentActive(4, i) && tentacle3[i] != null) {
+                tentacle3[i].draw(g2d);
+            }
+        }
+
+        // Czwarta macka
+        for (int i = 0; i < tentacle4.length; i++) {
+            if (board.isSegmentActive(5, i) && tentacle4[i] != null) {
+                tentacle4[i].draw(g2d);
+            }
+        }
+    }
+
+	public void renderSpritesDebug(Graphics2D g2d) {
         for (Sprite s : boatDiver) { if (s != null) s.draw(g2d); }
         for (Sprite s : extraDiver) { if (s != null) s.draw(g2d); }
         for (Sprite s : diverEmpty) { if (s != null) s.draw(g2d); }
@@ -216,5 +297,4 @@ public class SpriteRenderer {
         for (Sprite s : tentacle3) { if (s != null) s.draw(g2d); }
         for (Sprite s : tentacle4) { if (s != null) s.draw(g2d); }
     }
-	
 }
