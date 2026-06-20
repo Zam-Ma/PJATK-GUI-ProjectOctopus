@@ -2,7 +2,7 @@
 
 Niniejszy projekt stanowi implementację klasycznej gry zręcznościowej z serii *Nintendo Game & Watch*, zrealizowaną przy użyciu biblioteki Java Swing. Celem rozgrywki jest sterowanie postacią nurka wydobywającego skarby z dna oceanu, przy jednoczesnym unikaniu kolizji z mackami gigantycznej ośmiornicy. Aplikacja powstała w ramach przedmiotu Programowanie Interfejsów Graficznych (GUI). 🎓
 
-*(W tym miejscu należy umieścić zrzut ekranu prezentujący działanie aplikacji)* 📸
+![Rozgrywka w Octopus](https://github.com/Zam-Ma/PJATK-GUI-ProjectOctopus/blob/main/art_source/screenshot.png)
 
 ## 🎮 Mechanika Rozgrywki i Sterowanie
 
